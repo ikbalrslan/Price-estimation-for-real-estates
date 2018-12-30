@@ -13,25 +13,24 @@ def join(val):
 
 
 # fetching data
-con = sq.connect('parsed.db')
+con = sq.connect('../../house_spider/parsed.db')
 con.row_factory = sq.Row
 cursor = con.cursor()
-# cursor.execute('SELECT * FROM hurriyet WHERE yer IN (SELECT yer FROM hurriyet GROUP BY yer HAVING count(yer) > 0)')
-cursor.execute("SELECT * FROM hurriyet WHERE yer LIKE '%Ankara%'")
+cursor.execute("SELECT * FROM hurriyet_ankara")
 data = cursor.fetchall()
 cursor.close()
 
 cursor = con.cursor()
-cursor.execute('SELECT * FROM hurriyet_place_index')
+cursor.execute('SELECT * FROM hurriyet_ankara_place_index')
 enumerator = cursor.fetchall()
 cursor.close()
 enum = {}
 
 for i in enumerator:
-    enum[i['place']] = i['id']
+    enum[i['yer']] = i['id']
 
 
-train, test = train_test_split(data, test_size=0.1, shuffle=True)
+train, test = train_test_split(data, test_size=0.3, shuffle=True)
 
 training_data = {'x': [], 'y': []}
 test_data = {'x': [], 'y': []}
@@ -57,11 +56,12 @@ test_data['y'] = np.divide(np.array(test_data['y']), np.max(np.array(test_data['
     knn.fit(training_data['x'], training_data['y'])
     print('KNN score is for %d: %f' % (k, knn.score(test_data['x'], test_data['y'])))"""
 
-knn = neighbors.KNeighborsRegressor(n_neighbors=15, algorithm='auto')
+knn = neighbors.KNeighborsRegressor(n_neighbors=50, algorithm='auto')
 knn.fit(training_data['x'], training_data['y'])
 print('KNN score is for %d: %f' % (15, knn.score(test_data['x'], test_data['y'])))
 print('KNN training score is for %d: %f' % (15, knn.score(training_data['x'], training_data['y'])))
 prediction = knn.predict(test_data['x'])
+print("-"*20 + "\n")
 """
 plt.plot(prediction, label='prediction')
 plt.plot(test_data['y'], label='expected')
@@ -76,7 +76,7 @@ print('Training accuracy: ', reg.score(training_data['x'], training_data['y']))
 print(reg.coef_)
 
 prediction = reg.predict(test_data['x'])
-
+print("-"*20 + "\n")
 """plt.plot(prediction, label='prediction')
 plt.plot(test_data['y'], label='expected')
 plt.legend()
