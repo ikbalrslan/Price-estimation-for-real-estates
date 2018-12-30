@@ -13,7 +13,7 @@ def join(val):
 
 
 # fetching data
-con = sq.connect('usa_kaggle.db')
+con = sq.connect('../../house_spider/usa_kaggle.db')
 con.row_factory = sq.Row
 cursor = con.cursor()
 # cursor.execute('SELECT * FROM hurriyet WHERE yer IN (SELECT yer FROM hurriyet GROUP BY yer HAVING count(yer) > 0)')
