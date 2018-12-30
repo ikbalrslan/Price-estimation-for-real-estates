@@ -1,3 +1,6 @@
 scrapy
 sqlalchemy
 scikit-learn
+requests
+scrapy-fake-useragent
+pillow

@@ -15,7 +15,7 @@ session = DBSession()
 class HurriyetSpider(scrapy.Spider):
     name = "hurriyet_spider"
     start_urls = [
-        "https://www.hurriyetemlak.com/konut-satilik/ankara-daire/listeleme"
+        "https://www.hurriyetemlak.com/ankara-satilik/daire"
     ]
     log = open("invalid-parse-url.txt", "w")
 
