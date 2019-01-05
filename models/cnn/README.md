@@ -14,4 +14,4 @@ please run with following commands for train networks.
     python CNN_model.py train kitchen
     python CNN_model.py train bedroom
     
-Models and weights created and saved automaticly.
+Models and weights will be created and saved automaticly.
