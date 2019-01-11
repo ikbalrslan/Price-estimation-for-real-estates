@@ -33,9 +33,9 @@ train_data_dir = trainpath+ '/train'
 validation_data_dir = trainpath + '/validation'
 
 # number of epochs to train top model
-epochs = 300
+epochs = 100
 # batch size used by flow_from_directory and predict_generator
-batch_size = 4
+batch_size = 2
 
 
 def save_bottlebeck_features():
@@ -61,7 +61,7 @@ def save_bottlebeck_features():
     predict_size_train = int(math.ceil(nb_train_samples / batch_size))
 
     bottleneck_features_train = model.predict_generator(
-        generator, predict_size_train)
+        generator, predict_size_train,verbose=1)
 
     np.save(trainpath+'_train_features.npy', bottleneck_features_train)
 
@@ -78,7 +78,7 @@ def save_bottlebeck_features():
         math.ceil(nb_validation_samples / batch_size))
 
     bottleneck_features_validation = model.predict_generator(
-        generator, predict_size_validation)
+        generator, predict_size_validation,verbose=1)
 
     np.save(trainpath+'_validation_features.npy',
             bottleneck_features_validation)
@@ -86,6 +86,7 @@ def save_bottlebeck_features():
 
 def train_top_model():
     datagen_top = ImageDataGenerator(rescale=1. / 255)
+
     generator_top = datagen_top.flow_from_directory(
         train_data_dir,
         target_size=(img_width, img_height),
@@ -128,9 +129,9 @@ def train_top_model():
     model.add(Flatten(input_shape=train_data.shape[1:]))
     model.add(Dense(256, activation='relu'))
     model.add(Dropout(0.5))
-    model.add(Dense(num_classes, activation='sigmoid'))
+    model.add(Dense(num_classes, activation='softmax'))
 
-    model.compile(optimizer='rmsprop',
+    model.compile(optimizer='adam',
                   loss='categorical_crossentropy', metrics=['accuracy'])
 
     history = model.fit(train_data, train_labels,
@@ -173,7 +174,7 @@ def train_top_model():
 
 def predict():
     # load the class_indices saved in the earlier step
-    class_dictionary = np.load('class_indices.npy').item()
+    class_dictionary = np.load(sys.argv[2]+'_class_indices.npy').item()
 
     num_classes = len(class_dictionary)
 
@@ -230,7 +231,7 @@ def predict():
     cv2.destroyAllWindows()
 
 if sys.argv[1]=="train":
-    save_bottlebeck_features()
+    #save_bottlebeck_features()
     train_top_model()
 if sys.argv[1]=="test":
     predict()

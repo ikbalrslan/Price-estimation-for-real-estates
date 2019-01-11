@@ -75,7 +75,7 @@ for name in train:
     for names in train_banyoresimleri[name]:
 
         shutil.copy(names,
-                    "bathroom/train/" + str(getlabel(int(mydict[name]))) + "/" + name + "_" + names.split("/")[3]+".jpg")
+                    "bathroom/train/" + str(getlabel(int(mydict[name]))) + "/" + name + "_" + names.split("/")[3])
     for names in train_mutfakresimleri[name]:
 
         shutil.copy(names, "kitchen/train/" + str(getlabel(int(mydict[name]))) + "/" + name + "_" + names.split("/")[3])
