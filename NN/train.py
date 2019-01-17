@@ -8,9 +8,8 @@ from keras.preprocessing.image import ImageDataGenerator
 from matplotlib import pyplot as plt
 import random
 
-BATCH_SIZE = 1
-SCALE_SIZE_TO = 300
-# TF_CPP_MIN_LOG_LEVEL = 2
+BATCH_SIZE = 16
+SCALE_SIZE_TO = 224
 # os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 C2N = {'grayscale': 1, 'rgb': 3}
@@ -19,7 +18,7 @@ DATA_TYPES = ['scraped', 'ready_to_use']
 DATA_TYPE = DATA_TYPES[0]
 
 ROOMS = ['bathroom', 'kitchen', 'bedroom']
-SELECTED_ROOM = ROOMS[0]
+SELECTED_ROOM = ROOMS[1]
 
 DATA_PATH = '../DATA/data_' + DATA_TYPE + "/" + SELECTED_ROOM + '_data'
 VALIDATION_PATH = '../DATA/validation_' + DATA_TYPE + '/' + SELECTED_ROOM + '_data'
@@ -33,13 +32,13 @@ EPOCHS = 10
 def train():
     # loader/preprocessor for data
     train_datagen = ImageDataGenerator(
-        rescale=1. / SCALE_SIZE_TO,
+        rescale=1. / 255,
         shear_range=0.2,  # random application of shearing
         zoom_range=0.2,
         horizontal_flip=True)  # randomly flipping half of the images horizontally
 
     # loader for test
-    test_datagen = ImageDataGenerator(rescale=1. / SCALE_SIZE_TO)
+    test_datagen = ImageDataGenerator(rescale=1. / 255)
 
     train_generator = train_datagen.flow_from_directory(
         DATA_PATH,
@@ -59,11 +58,9 @@ def train():
 
     model.add(Flatten(input_shape=(SCALE_SIZE_TO, SCALE_SIZE_TO, C2N[COLOR_TYPE])))
     model.add(Dense(HIDDEN_NODE_COUNT, activation=HIDDEN_ACTIVATION))
-    model.add(Dense(10, activation='softmax'))
+    model.add(Dense(train_generator.num_classes, activation='softmax'))
 
-    # head_model = Model(input=model.input, output=x)
-
-    model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['acc'])
+    model.compile(optimizer="adam", loss='categorical_crossentropy', metrics=['acc', "mae"])
 
     history = model.fit_generator(train_generator,
                                   steps_per_epoch=len(train_generator),
