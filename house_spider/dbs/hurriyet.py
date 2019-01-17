@@ -7,7 +7,7 @@ Base = declarative_base()
 
 
 class Hurriyet(Base):
-    __tablename__ = "hurriyet_ankara"
+    __tablename__ = "hurriyet_ankara_im"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     link = Column(String)

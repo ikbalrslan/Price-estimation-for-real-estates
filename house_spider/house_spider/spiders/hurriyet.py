@@ -17,7 +17,7 @@ class HurriyetSpider(scrapy.Spider):
     start_urls = [
         "https://www.hurriyetemlak.com/ankara-satilik/daire"
     ]
-    log = open("invalid-parse-url.txt", "w")
+    log = open("invalid-parse-url_3.txt", "w")
 
     def parse(self, response):
         print(response.status)
@@ -52,7 +52,7 @@ class HurriyetSpider(scrapy.Spider):
 
             """ images """
             thumb_list = response.css("img.pretty::attr(src)").extract()
-            full_size_list = [thumb.replace("?type=4&", "?type=44&") for thumb in thumb_list]
+            # full_size_list = [thumb.replace("?type=4&", "?type=44&") for thumb in thumb_list]
 
             il_no = response.css("li.realty-numb").css("span::text").extract_first().split(" ")[-1]
 
@@ -84,3 +84,4 @@ class HurriyetSpider(scrapy.Spider):
             ))
 
             # imfetch(full_size_list, il_no)
+            imfetch(thumb_list, il_no)

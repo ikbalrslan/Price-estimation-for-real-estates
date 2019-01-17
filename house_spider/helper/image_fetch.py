@@ -22,6 +22,8 @@ def imfetch(arr, folder_name):
             for chunk in r.iter_content():
                 fout.write(chunk)
 
+        sleep(3)
+
         """i = Image.open(BytesIO(r.content))
         i.save(path+name, "JPEG")
         sleep(1)"""
